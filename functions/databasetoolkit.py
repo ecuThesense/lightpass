@@ -1,4 +1,5 @@
-import pykeepass, pathlib
+import pykeepass, pathlib, curses
+import buttons
 
 project_root = pathlib.Path(__file__).resolve().parent.parent
 dir_path = project_root / "databases"
@@ -13,13 +14,13 @@ def create_db(name,
                                      keyfile,
                                      transformed_key)
 
-def list_db():
+def list_db(stdscr):
 
-    if not dir_path.exists(): return []
+    if not dir_path.exists(): return None # Add creation func
     
-    contents = [item for item in dir_path.glob("*.kdbx") if item.is_file()]
-
-    return contents
+    contents = [str(item) for item in dir_path.glob("*.kdbx") if item.is_file()]
+    db = buttons.draw_menu(stdscr, contents)
+    return db
 
 
 def load_db(path_db, password):
