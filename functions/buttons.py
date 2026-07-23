@@ -26,7 +26,7 @@ def run_main_menu_item(stdscr, item):
         stdscr.refresh()
         
         while True:
-            key = stdscr.getch()
+            key = inputkey(stdscr)
             if key in enter_keys():
                 stdscr.clear()
                 break
@@ -63,13 +63,15 @@ def draw_menu(stdscr, menu_items):
             else:
                 stdscr.addstr(row, 2, text)
 
-        if inputkey(stdscr) == curses.KEY_UP:
+        key = inputkey(stdscr)
+
+        if key == curses.KEY_UP:
             selected = (selected - 1) % len(menu_items)
 
-        elif inputkey(stdscr) == curses.KEY_DOWN:
+        elif key == curses.KEY_DOWN:
             selected = (selected + 1) % len(menu_items)
 
-        elif inputkey(stdscr) in enter_keys():
+        elif key in enter_keys():
 
             selected_item = run_main_menu_item(stdscr, menu_items[selected])
 
