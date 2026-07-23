@@ -1,17 +1,31 @@
 import curses
 import passgen3, buttons, interface
 
-MENU_ITEMS = buttons.menu_items(
-    "Select Database",
-    "Generate Passwords",
-    "Settings",
-    "Quit"
+def mainpage(stdscr):
+    item = buttons.draw_menu(stdscr, buttons.menu_items(
+        "Select Database",
+        "Generate Passwords",
+        "Settings",
+        "Quit"
+        )
     )
 
-def main(stdscr):
-    buttons.draw_menu(stdscr, MENU_ITEMS)
+    match item:
+        case "Select Database":
+            stdscr.clear()
+            stdscr.addstr(0, 0, "Database screen not implemented.")
+            stdscr.getch()
+            stdscr.clear()
+        case "Generate Passwords":
+            stdscr.clear()
+            passgen3.gen_passwords(stdscr)
+        case "Settings":
+            stdscr.clear()
+            stdscr.addstr(0, 0, "Settings screen not implemented.")
+            stdscr.getch()
+            stdscr.clear()
+        case "Quit":
+            return False
 
-curses.wrapper(main)
-
-#if __name__ == "__main__":
-#    curses.wrapper(main)
+if __name__ == "__main__":
+    curses.wrapper(mainpage)
