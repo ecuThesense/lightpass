@@ -1,56 +1,20 @@
-import curses
-import passgen3
-
-def inputkey(stdscr):
-    key = stdscr.getch()
-    return key
+import curses, platform, subprocess
 
 def enter_keys():
     KEYS = (curses.KEY_ENTER, 10, 13)
     return KEYS
 
+def clipboard_x(result):
+    system = platform.system()
+    if system == "Windows": subprocess.run(["clip"], input=result, text=True)
+    elif system == "Darwin": subprocess.run(["pbcopy"], input=result, text=True)
+    else: subprocess.run(["wl-copy"], input=result, text=True)
+
 def menu_items(*items):
     return list(items)
 
-# Run selected menu item
-def run_main_menu_item(stdscr, item):
-
-    if item == "Generate Passwords":
-
-        # Open another screen
-        stdscr.clear()
-        stdscr.addstr(2, 0, passgen3.password_screen(stdscr))
-        stdscr.addstr(4, 0, "Password generation finished.")
-        stdscr.addstr(5, 0, "Press Enter to return...")
-
-        stdscr.refresh()
-        
-        while True:
-            key = inputkey(stdscr)
-            if key in enter_keys():
-                stdscr.clear()
-                break
-
-    elif item == "Select Database":
-
-        stdscr.clear()
-        stdscr.addstr(0, 0, "Database screen not implemented.")
-        stdscr.getch()
-
-    elif item == "Settings":
-
-        stdscr.clear()
-        stdscr.addstr(0, 0, "Settings screen not implemented.")
-        stdscr.getch()
-
-    elif item == "Quit":
-        return False
-
-    return True
-
-
 def draw_menu(stdscr, menu_items):
-    curses.curs_set(0)      # Hide cursor
+    curses.curs_set(0)
     stdscr.keypad(True)
     stdscr.clear()
     selected = 0
@@ -63,7 +27,7 @@ def draw_menu(stdscr, menu_items):
             else:
                 stdscr.addstr(row, 2, text)
 
-        key = inputkey(stdscr)
+        key = stdscr.getch()
 
         if key == curses.KEY_UP:
             selected = (selected - 1) % len(menu_items)
@@ -72,12 +36,11 @@ def draw_menu(stdscr, menu_items):
             selected = (selected + 1) % len(menu_items)
 
         elif key in enter_keys():
+            if not menu_items[selected]: break
 
-            selected_item = run_main_menu_item(stdscr, menu_items[selected])
-
-            if not selected_item:
-                break
+            return menu_items[selected]
 
         stdscr.refresh()
 
-
+def db_create_menu():
+    pass
