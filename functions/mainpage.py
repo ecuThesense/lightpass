@@ -1,5 +1,5 @@
 import curses
-import passgen3, buttons, interface
+import passgen3, buttons, interface, databasetoolkit
 
 def mainpage(stdscr):
     item = buttons.draw_menu(stdscr, buttons.menu_items(
@@ -13,7 +13,7 @@ def mainpage(stdscr):
     match item:
         case "Select Database":
             stdscr.clear()
-            stdscr.addstr(0, 0, "Database screen not implemented.")
+            databasetoolkit.list_db(stdscr)
             stdscr.getch()
             stdscr.clear()
         case "Generate Passwords":
