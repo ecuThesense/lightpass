@@ -13,9 +13,7 @@ def mainpage(stdscr):
     match item:
         case "Select Database":
             stdscr.clear()
-            databasetoolkit.list_db(stdscr)
-            stdscr.getch()
-            stdscr.clear()
+            databasetoolkit.db_global_menu(stdscr)
         case "Generate Passwords":
             stdscr.clear()
             passgen3.gen_passwords(stdscr)
