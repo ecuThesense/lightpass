@@ -14,30 +14,28 @@ def menu_items(*items):
     return list(items)
 
 
-def help_bar(stdscr, text="test"):
-    helper, _ = stdscr.getmaxyx()
-
-    while True:
-        stdscr.addstr(helper - 1, 0, text, curses.A_REVERSE)
-        stdscr.refresh()
-        key = stdscr.getch()
-        return key
-
-
-def draw_menu(stdscr, menu_items):
+def draw_menu(stdscr, menu_items, display=str, is_helper=False, helper_text="test"):
     curses.curs_set(0)
     stdscr.keypad(True)
     stdscr.clear()
     selected = 0
+    helper, _ = stdscr.getmaxyx()
+
+    if is_helper:
+        stdscr.addstr(helper - 1, 0, helper_text, curses.A_REVERSE)
+        stdscr.refresh()
 
     while True:
 
-        for row, text in enumerate(menu_items):
+        for row, item in enumerate(menu_items):
+            text = display(item)
+
             if row == selected:
                 stdscr.addstr(row, 2, text, curses.A_REVERSE)
             else:
                 stdscr.addstr(row, 2, text)
-
+        
+       
         key = stdscr.getch()
 
         if key == curses.KEY_UP:
@@ -47,8 +45,11 @@ def draw_menu(stdscr, menu_items):
             selected = (selected + 1) % len(menu_items)
 
         elif key in enter_keys():
-            if not menu_items[selected]: break
-
+            if not menu_items[selected]: continue
             return menu_items[selected]
+        
+        elif is_helper:
+            key = chr(key)
+            return key 
 
-            stdscr.refresh()
+        stdscr.refresh()
