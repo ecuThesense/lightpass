@@ -72,9 +72,9 @@ def db_menu(stdscr, db):
                              "Username: ",
                              "Password: "]
                 
-                #got error in group type
-                group_names = [group.name for group in unlocked_db.groups]
-                selected_group = buttons.draw_menu(stdscr, group_names)
+                selected_group = buttons.draw_menu(stdscr,
+                                                   unlocked_db.groups,
+                                                   display=lambda g: g.name)
 
                 for question in questions:
                     stdscr.clear()
@@ -83,7 +83,10 @@ def db_menu(stdscr, db):
                     stdscr.refresh()
                     data.append(stdscr.getstr().decode())
 
-                unlocked_db.add_entry(pykeepass.Group(name=selected_group), data[0], data[1], data[2])
+                unlocked_db.add_entry(selected_group,
+                                      data[0],
+                                      data[1],
+                                      data[2])
                 continue
 
             case "q":
@@ -92,13 +95,45 @@ def db_menu(stdscr, db):
             
             case "d":
                 unlocked_db.delete_entry(entry)
+                stdscr.refresh()
                 continue
             
             case _:
                 stdscr.clear()
                 curses.echo()
-                stdscr.addstr(0, 0, entry)
+                fields = [
+                        f"Title: {entry.title}",
+                        f"Username: {entry.username}",
+                        f"Password: {entry.password}",
+                        f"URL: {entry.url}",
+                        f"Notes: {entry.notes}",
+                        f"OTP: {entry.otp}",
+                        f"Tags: {entry.tags}",
+                        f"Expires? {entry.expires}",
+                        f"Creation Time: {entry.expiry_time}",
+                        ]
+
+                data = buttons.draw_menu(stdscr,
+                                         fields,
+                                         is_helper=True,
+                                         helper_text="[E]dit | [D]elete | [Enter] Copy | [Q]uit")
                 stdscr.refresh()
+                match data:
+                    case "e":
+                        pass
+                    case "q":
+                        pass
+                    case "d":
+                        unlocked_db.delete_entry(entry)
+                        stdscr.refresh()
+                        continue
+                    case _:
+                        buttons.clipboard_x(data)
+                        continue
+                
+                stdscr.getch()
+                stdscr.clear()
+                continue
 
 def db_global_menu(stdscr):
     stdscr.clear()
