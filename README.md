@@ -1,11 +1,11 @@
 # lightpass
-A lightweight password manager that uses the Keepass database format.
+A lightweight python-based password manager that uses the Keepass (.kdbx) database format.
 
 <img width="480" height="270" alt="image" src="https://github.com/user-attachments/assets/3ac327be-ec93-44e1-b79d-cbd2d8cc02f9" />
 
 # Here is the project roadmap:
 1. Abillity to import existing Database and create a new one.
-2. See list os passwords and groups
+2. See list of passwords and groups
 3. Navigation via <-||-> and like VIM style
 4. Abillity to create new groups and passwords + TOTP and save Database automaticaly
 5. Abillity to copy data from an Entry
