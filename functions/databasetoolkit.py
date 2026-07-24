@@ -72,7 +72,7 @@ def db_menu(stdscr, db):
                              "Username: ",
                              "Password: "]
                 
-                selected_group = buttons.draw_menu(stdscr,
+                key, selected_group = buttons.draw_menu(stdscr,
                                                    unlocked_db.groups,
                                                    display=lambda g: g.name)
 
