@@ -64,10 +64,9 @@ def db_global_menu(stdscr):
 
     if contents == []:
         stdscr.clear()
-        stdscr.addstr(0, 0, "There are no DB files in folder,")
+        stdscr.addstr(0, 0, "There are no Database files in your folder,")
         stdscr.addstr(1, 0, "Do you want to create one?")
         stdscr.refresh()
-        stdscr.getch()
         key = buttons.help_bar(stdscr, text="[Y]es | [N]o")
         if key == ord("y"):
             db = db_create_menu(stdscr)

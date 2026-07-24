@@ -13,6 +13,17 @@ def clipboard_x(result):
 def menu_items(*items):
     return list(items)
 
+
+def help_bar(stdscr, text="test"):
+    helper, _ = stdscr.getmaxyx()
+
+    while True:
+        stdscr.addstr(helper - 1, 0, text, curses.A_REVERSE)
+        stdscr.refresh()
+        key = stdscr.getch()
+        return key
+
+
 def draw_menu(stdscr, menu_items):
     curses.curs_set(0)
     stdscr.keypad(True)
@@ -41,15 +52,3 @@ def draw_menu(stdscr, menu_items):
             return menu_items[selected]
 
             stdscr.refresh()
-
-
-def help_bar(stdscr, text="test"):
-    helper, _ = stdscr.getmaxyx()
-
-    while True:
-        stdscr.clear()
-        stdscr.addstr(helper - 1, 0, text, curses.A_REVERSE)
-        stdscr.refresh()
-        key = stdscr.getch()
-        return key
-
