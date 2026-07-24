@@ -1,5 +1,5 @@
 import curses
-import passgen3, buttons, interface, databasetoolkit
+import passgen3, buttons, databasetoolkit
 
 def mainpage(stdscr):
     item = buttons.draw_menu(stdscr, buttons.menu_items(
