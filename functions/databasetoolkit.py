@@ -8,13 +8,14 @@ def create_db(name,
               password, 
               keyfile=None,
               transformed_key=None):
-    with open(project_root / "databases" / name, "x") as file:
-        file.write(pykeepass.create_database(f"{name}.kdbx",
-                                             password,
-                                             keyfile,
-                                             transformed_key))
-        file.close()
+    db_path = project_root / "databases" / f"{name}.kdbx"
 
+    pykeepass.create_database(
+        str(db_path),
+        password=password,
+        keyfile=keyfile,
+        transformed_key=transformed_key,
+        )
 
 def list_db(stdscr):
 
@@ -26,25 +27,28 @@ def list_db(stdscr):
     return contents
 
 
-def load_db(path_db,
-            password,
-            keyfile=None,
-            transformed_key=None):
+def load_db(stdscr, path_db):
+    stdscr.clear()
+    curses.echo()
+    stdscr.addstr(0, 0, "Enter a Password of the Database: ")
+    stdscr.refresh()
+    password = stdscr.getstr().decode()
+    stdscr.clear() 
     return pykeepass.PyKeePass(path_db,
-                               password,
-                               keyfile,
-                               transformed_key)
+                               password)
 
 #------
 # Menu
 #------
 def db_create_menu(stdscr):
     stdscr.clear()
+    curses.echo()
     stdscr.addstr(0, 0, "Enter a Name of New Database: ")
     stdscr.refresh()
     name = stdscr.getstr().decode()
     
     stdscr.clear()
+    curses.echo()
     stdscr.addstr(0, 0, "Enter a Password of New Database: ")
     stdscr.refresh()
     password = stdscr.getstr().decode()
@@ -54,7 +58,7 @@ def db_create_menu(stdscr):
 
 
 def db_menu(stdscr, db):
-    unlocked_db = load_db(db)
+    unlocked_db = load_db(stdscr, db)
     entry = buttons.draw_menu(stdscr, unlocked_db.entries)
     return False
 
@@ -70,9 +74,10 @@ def db_global_menu(stdscr):
         key = buttons.help_bar(stdscr, text="[Y]es | [N]o")
         if key == ord("y"):
             db = db_create_menu(stdscr)
+            db_global_menu(stdscr)
         elif key == ord("n"):
             return mainpage.mainpage(stdscr) 
     else:
         db_path = buttons.draw_menu(stdscr, contents)
-        db_menu(db=db_path)
+        db_menu(stdscr, db=db_path)
 

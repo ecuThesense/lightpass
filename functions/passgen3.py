@@ -17,6 +17,7 @@ def passgen3(passw_type = 1, passw_lenght = 15):
 def passw_lenght_check(stdscr):
     while True:
         stdscr.clear()
+        curses.echo()
         stdscr.addstr(0, 0, "How big should your password be: ")
         stdscr.refresh()
 
