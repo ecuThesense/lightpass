@@ -1,4 +1,4 @@
-import string, secrets, curses, tkinter
+import string, secrets, curses
 import buttons, mainpage
 
 def passgen3(passw_type = 1, passw_lenght = 15):
