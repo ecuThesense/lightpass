@@ -1,14 +1,42 @@
-import curses, platform, subprocess
+import curses, platform, subprocess, shutil
 
 def enter_keys():
     KEYS = (curses.KEY_ENTER, 10, 13)
     return KEYS
 
-def clipboard_x(result):
+def clipboard_x(text):
     system = platform.system()
-    if system == "Windows": subprocess.run(["clip"], input=result, text=True)
-    elif system == "Darwin": subprocess.run(["pbcopy"], input=result, text=True)
-    else: subprocess.run(["wl-copy"], input=result, text=True)
+
+    if system == "Windows":
+        subprocess.run(["clip"], input=text, text=True, check=True)
+
+    elif system == "Darwin":
+        subprocess.run(["pbcopy"], input=text, text=True, check=True)
+
+    elif shutil.which("wl-copy"):
+        subprocess.run(["wl-copy"], input=text, text=True, check=True)
+
+    elif shutil.which("xclip"):
+        subprocess.run(
+            ["xclip", "-selection", "clipboard"],
+            input=text,
+            text=True,
+            check=True,
+        )
+
+    elif shutil.which("xsel"):
+        subprocess.run(
+            ["xsel", "--clipboard", "--input"],
+            input=text,
+            text=True,
+            check=True,
+        )
+
+    else:
+        raise RuntimeError(
+            "No supported clipboard utility found. "
+            "Install 'wl-clipboard' (Wayland), 'xclip', or 'xsel'."
+        )
 
 def menu_items(*items):
     return list(items)
