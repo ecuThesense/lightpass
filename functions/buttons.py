@@ -46,10 +46,9 @@ def draw_menu(stdscr, menu_items, display=str, is_helper=False, helper_text="tes
 
         elif key in enter_keys():
             if not menu_items[selected]: continue
-            return menu_items[selected]
+            return ("enter", menu_items[selected])
         
         elif is_helper:
-            key = chr(key)
-            return key 
+            return (chr(key), menu_items[selected]) 
 
         stdscr.refresh()

@@ -61,11 +61,11 @@ def db_menu(stdscr, db):
     unlocked_db = load_db(stdscr, db)
     
     while True:
-        entry = buttons.draw_menu(stdscr,
-                                  unlocked_db.entries,
-                                  is_helper=True,
-                                  helper_text="[C]reate Entry | [D]elete Entry | [Q]uit and Save")
-        match entry:
+        key, entry = buttons.draw_menu(stdscr,
+                                       unlocked_db.entries,
+                                       is_helper=True,
+                                       helper_text="[C]reate Entry | [D]elete Entry | [Q]uit and Save")
+        match key:
             case "c":
                 data = []
                 questions = ["Title: ",
@@ -98,38 +98,47 @@ def db_menu(stdscr, db):
                 stdscr.refresh()
                 continue
             
-            case _:
+            case "enter":
                 stdscr.clear()
                 curses.echo()
                 fields = [
-                        f"Title: {entry.title}",
-                        f"Username: {entry.username}",
-                        f"Password: {entry.password}",
-                        f"URL: {entry.url}",
-                        f"Notes: {entry.notes}",
-                        f"OTP: {entry.otp}",
-                        f"Tags: {entry.tags}",
-                        f"Expires? {entry.expires}",
-                        f"Creation Time: {entry.expiry_time}",
+                        ("Title", "title"),
+                        ("Username", "username"),
+                        ("Password", "password"),
+                        ("URL", "url"),
+                        ("Notes", "notes"),
+                        ("OTP", "otp"),
+                        ("Tags:", "tags"),
+                        ("Expires", "expires"),
+                        ("Creation Time", "expiry_time"),
                         ]
 
-                data = buttons.draw_menu(stdscr,
+                key, selected = buttons.draw_menu(stdscr,
                                          fields,
+                                         display=lambda f: f"{f[0]}: {getattr(entry, f[1])}",
                                          is_helper=True,
                                          helper_text="[E]dit | [D]elete | [Enter] Copy | [Q]uit")
                 stdscr.refresh()
-                match data:
+                match key:
                     case "e":
-                        pass
+                        label, attribute = selected
+                        stdscr.clear()
+                        curses.echo()
+                        stdscr.addstr(0, 0, f"New {label}: ")
+                        new_value = stdscr.getstr().decode()
+                        setattr(entry, attribute, new_value)
+                        stdscr.refresh()
+                        continue
                     case "q":
-                        pass
+                        continue
                     case "d":
                         unlocked_db.delete_entry(entry)
                         stdscr.refresh()
                         continue
-                    case _:
-                        buttons.clipboard_x(data)
-                        continue
+                    case "enter":
+                        label, attribute = selected
+                        buttons.clipboard_x(getattr(entry, attribute))
+                        # continue
                 
                 stdscr.getch()
                 stdscr.clear()
@@ -138,7 +147,7 @@ def db_menu(stdscr, db):
 def db_global_menu(stdscr):
     stdscr.clear()
     contents = list_db(stdscr)
-    action = buttons.draw_menu(stdscr,
+    key, action = buttons.draw_menu(stdscr,
                                contents,
                                is_helper=True,
                                helper_text="[C]reate | [Q]uit")

@@ -2,7 +2,7 @@ import curses
 import passgen3, buttons, databasetoolkit
 
 def mainpage(stdscr):
-    item = buttons.draw_menu(stdscr, buttons.menu_items(
+    key, item = buttons.draw_menu(stdscr, buttons.menu_items(
         "Select Database",
         "Generate Passwords",
         "Settings",
