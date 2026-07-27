@@ -1,5 +1,5 @@
 import pykeepass, pathlib, curses, os
-import buttons, mainpage
+from . import buttons
 
 project_root = pathlib.Path(__file__).resolve().parent.parent
 dir_path = project_root / "databases"
@@ -82,9 +82,15 @@ def db_menu(stdscr, db):
                 for question in questions:
                     stdscr.clear()
                     curses.echo()
-                    stdscr.addstr(0, 0, question)
-                    stdscr.refresh()
-                    data.append(stdscr.getstr().decode())
+                    if question == "Password: ":
+                        # make user decide
+                        gen_passwords(stdscr)
+                        data.append(stdscr.getstr().decode())
+                        stdscr.refresh()
+                    else:
+                        stdscr.addstr(0, 0, question)
+                        stdscr.refresh()
+                        data.append(stdscr.getstr().decode())
 
                 unlocked_db.add_entry(selected_group,
                                       data[0],
@@ -159,7 +165,7 @@ def db_global_menu(stdscr):
             db = db_create_menu(stdscr)
             return db_global_menu(stdscr)
         case "q":
-            return mainpage.mainpage(stdscr) 
+            return 
         case _:
             db_menu(stdscr, db=action)
             stdscr.refresh()

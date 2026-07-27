@@ -1,5 +1,5 @@
 import string, secrets, curses
-import buttons, mainpage
+from . import buttons
 
 def passgen3(passw_type = 1, passw_lenght = 15):
     letters = string.ascii_letters + string.digits + '!@#$%^&*()'
@@ -21,7 +21,6 @@ def passw_lenght_check(stdscr):
         stdscr.addstr(0, 0, "How big should your password be: ")
         stdscr.refresh()
 
-        # value = stdscr.getstr(2, 35, 5).decode()
         value = stdscr.getstr().decode()
 
         try:
@@ -49,23 +48,5 @@ def fin_passwords(stdscr, result):
 
     stdscr.getch()
     stdscr.clear()
-    return mainpage.mainpage(stdscr)
-
-def gen_passwords(stdscr):
-    item = buttons.draw_menu(stdscr, buttons.menu_items(
-        "Generate Password",
-        "Generate Passphrase",
-        "Quit"
-        )
-    )
-
-    match item:
-        case "Generate Password":
-            return fin_passwords(stdscr, passgen3(passw_type = 1, passw_lenght = passw_lenght_check(stdscr)))
-
-        case "Generate Passphrase":
-            return fin_passwords(stdscr, passgen3(passw_type = 2, passw_lenght = passw_lenght_check(stdscr)))
-
-        case "Quit":
-            return mainpage.mainpage(stdscr) 
-
+    
+    return
