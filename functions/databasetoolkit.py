@@ -64,7 +64,10 @@ def db_menu(stdscr, db):
         key, entry = buttons.draw_menu(stdscr,
                                        unlocked_db.entries,
                                        is_helper=True,
-                                       helper_text="[C]reate Entry | [D]elete Entry | [Q]uit and Save")
+                                       helper_text="[C]reate Entry | [D]elete Entry | [Q]uit and Save",
+                                       is_upper=True,
+                                       upper_text=f"{db}",
+                                       height=2)
         match key:
             case "c":
                 data = []
@@ -151,7 +154,7 @@ def db_global_menu(stdscr):
                                contents,
                                is_helper=True,
                                helper_text="[C]reate | [Q]uit")
-    match action:
+    match key:
         case "c":
             db = db_create_menu(stdscr)
             return db_global_menu(stdscr)

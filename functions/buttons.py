@@ -42,7 +42,16 @@ def menu_items(*items):
     return list(items)
 
 
-def draw_menu(stdscr, menu_items, display=str, is_helper=False, helper_text="test"):
+def draw_menu(stdscr,
+              menu_items,
+              display=str,
+              is_helper=False,
+              helper_text="test",
+              is_upper=False,
+              upper_text="test",
+              height=0,
+              width=2):
+
     curses.curs_set(0)
     stdscr.keypad(True)
     stdscr.clear()
@@ -53,17 +62,30 @@ def draw_menu(stdscr, menu_items, display=str, is_helper=False, helper_text="tes
         stdscr.addstr(helper - 1, 0, helper_text, curses.A_REVERSE)
         stdscr.refresh()
 
-    while True:
+    if is_upper:
+        stdscr.addstr(0, 0, upper_text, curses.A_REVERSE)
+        stdscr.refresh()
 
-        for row, item in enumerate(menu_items):
+    while True:
+        stdscr.clear()
+
+        if is_upper:
+            stdscr.addstr(0, 0, upper_text, curses.A_REVERSE)
+
+        if is_helper:
+            helper, _ = stdscr.getmaxyx()
+            stdscr.addstr(helper - 1, 0, helper_text, curses.A_REVERSE)
+
+        for index, item in enumerate(menu_items):
+            row = index + height
             text = display(item)
 
-            if row == selected:
-                stdscr.addstr(row, 2, text, curses.A_REVERSE)
+            if index == selected:
+                stdscr.addstr(row, width, text, curses.A_REVERSE)
             else:
-                stdscr.addstr(row, 2, text)
+                stdscr.addstr(row, width, text)        
         
-       
+        stdscr.refresh()
         key = stdscr.getch()
 
         if key == curses.KEY_UP:
