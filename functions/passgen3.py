@@ -1,10 +1,13 @@
-import string, secrets, curses
-from . import buttons
+import string, secrets, curses, os
+import functions.buttons
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+words_path = os.path.join(script_dir, 'words.txt')
 
 def passgen3(passw_type = 1, passw_lenght = 15):
     letters = string.ascii_letters + string.digits + '!@#$%^&*()'
 
-    with open('words.txt') as f:
+    with open(words_path) as f:
         match passw_type:
             case 1:
                 passw = ''.join(secrets.choice(letters) for _ in range(passw_lenght))
@@ -38,7 +41,7 @@ def passw_lenght_check(stdscr):
             stdscr.getch()
 
 def fin_passwords(stdscr, result):
-    buttons.clipboard_x(result)
+    functions.buttons.clipboard_x(result)
 
     stdscr.clear()
     stdscr.addstr(2, 0, result)
